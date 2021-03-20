@@ -1,0 +1,26 @@
+body {
+  background-color: #121212;
+  width: 400px;
+  height: 400px;
+  padding: 30px;
+}
+
+hr {
+  border-top: 1px solid #e7ebe0ff;
+}
+
+h3 {
+  color: #e7ebe0ff;
+}
+
+#startSession {
+  border-radius: 5px;
+}
+
+#endSession {
+  visibility: hidden;
+}
+
+#sessionTimer {
+  visibility: hidden;
+}

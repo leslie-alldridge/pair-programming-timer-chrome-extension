@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <h3>Pair Programming Timer</h3>
+    <hr />
+    <p>Enter Duration (minutes)</p>
+    <input class="form-control" type="number" />
+    <br />
+    <button class="btn-primary" id="startSession">Start Session</button>
+
+    <div class="container" id="sessionTimer">
+        <h4>Time remaining</h4>
+        <p>0:19:54</p>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+                aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+        </div>
+    </div>
+
+    <button class="btn-danger" id="endSession">End Session</button>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
