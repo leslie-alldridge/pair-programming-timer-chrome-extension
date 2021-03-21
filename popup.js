@@ -9,43 +9,47 @@ let rule = document.getElementById('rule');
 
 // Timer set up
 const FULL_DASH_ARRAY = 283;
-const WARNING_THRESHOLD = 10;
-const ALERT_THRESHOLD = 5;
-
-const COLOR_CODES = {
-  info: {
-    color: 'green',
-  },
-  warning: {
-    color: 'orange',
-    threshold: WARNING_THRESHOLD,
-  },
-  alert: {
-    color: 'red',
-    threshold: ALERT_THRESHOLD,
-  },
-};
-
-const TIME_LIMIT = 20;
+let TIME_LIMIT = 1200;
 let timePassed = 0;
 let timeLeft = TIME_LIMIT;
 let timerInterval = null;
-let remainingPathColor = COLOR_CODES.info.color;
 
 startSessionBtn.addEventListener('click', function () {
-  // Hide start button aand description
+  // Hide start button and other fields from the landing page
   startSessionBtn.style.display = 'none';
   description.style.display = 'none';
   inputDisplay.style.display = 'none';
   title.style.display = 'none';
   rule.style.display = 'none';
-  // Display timer options and end button
+
+  // Display timer options and end session button
   sessionTimer.style.display = 'block';
   endSession.style.visibility = 'visible';
 
+  // Retrieve user input from the first page and convert into minutes
+  TIME_LIMIT = Number(inputDisplay.value) * 60;
+  // Set warning and error values based on user input
+
+  WARNING_THRESHOLD = TIME_LIMIT / 4;
+  ALERT_THRESHOLD = TIME_LIMIT / 6;
+
+  const COLOR_CODES = {
+    info: {
+      color: 'green',
+    },
+    warning: {
+      color: 'orange',
+      threshold: WARNING_THRESHOLD,
+    },
+    alert: {
+      color: 'red',
+      threshold: ALERT_THRESHOLD,
+    },
+  };
+
   // Render timer and start the countdown
-  renderTimerHtml();
-  startTimer();
+  renderTimerHtml(TIME_LIMIT);
+  startTimer(COLOR_CODES);
 });
 
 endSession.addEventListener('click', () => {
@@ -78,7 +82,7 @@ resetToDefault = () => {
 // I liked how clean and easy this timer was. Credit: Mateusz Rybczonec
 // https://css-tricks.com/how-to-create-an-animated-countdown-timer-with-html-css-and-javascript/
 
-renderTimerHtml = () => {
+renderTimerHtml = (TIME_LIMIT) => {
   document.getElementById('app').innerHTML = `
   <div class="base-timer">
     <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +102,7 @@ renderTimerHtml = () => {
       </g>
     </svg>
     <span id="base-timer-label" class="base-timer__label">${formatTime(
-      20
+      TIME_LIMIT
     )}</span>
   </div>
   `;
@@ -108,7 +112,7 @@ function onTimesUp() {
   clearInterval(timerInterval);
 }
 
-function startTimer() {
+function startTimer(COLOR_CODES) {
   timerInterval = setInterval(() => {
     timePassed = timePassed += 1;
     timeLeft = TIME_LIMIT - timePassed;
@@ -116,9 +120,7 @@ function startTimer() {
       timeLeft
     );
     setCircleDasharray();
-    setRemainingPathColor(timeLeft);
-    console.log(timeLeft);
-    console.log(timePassed);
+    setRemainingPathColor(timeLeft, COLOR_CODES);
 
     if (timeLeft === 0) {
       onTimesUp();
@@ -137,7 +139,7 @@ function formatTime(time) {
   return `${minutes}:${seconds}`;
 }
 
-function setRemainingPathColor(timeLeft) {
+function setRemainingPathColor(timeLeft, COLOR_CODES) {
   const { alert, warning, info } = COLOR_CODES;
   if (timeLeft <= alert.threshold) {
     document
