@@ -2,12 +2,13 @@
   "name": "Pair Programming Timer Extension",
   "description": "A timer extension for switching roles during pair programming sessions.",
   "version": "1.0",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"],
+    "persistent": false
   },
   "permissions": ["storage", "alarms", "notifications"],
-  "action": {
+  "browser_action": {
     "default_popup": "popup.html"
   }
 }
