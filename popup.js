@@ -76,6 +76,8 @@ resetToDefault = () => {
   timeLeft = TIME_LIMIT;
   timerInterval = null;
   remainingPathColor = 'green';
+  chrome.action.setBadgeText({ text: '0:00' });
+  chrome.action.setBadgeBackgroundColor({ color: '#41B883' });
   document.getElementById('base-timer-label').style.color = 'rgb(65, 184, 131)';
 };
 
@@ -119,6 +121,10 @@ function startTimer(COLOR_CODES) {
     document.getElementById('base-timer-label').innerHTML = formatTime(
       timeLeft
     );
+
+    // Update chrome badge with countdown
+    chrome.action.setBadgeText({ text: String(formatTime(timeLeft)) });
+
     setCircleDasharray();
     setRemainingPathColor(timeLeft, COLOR_CODES);
 
@@ -150,6 +156,7 @@ function setRemainingPathColor(timeLeft, COLOR_CODES) {
       .classList.add(alert.color);
 
     document.getElementById('base-timer-label').style.color = 'red';
+    chrome.action.setBadgeBackgroundColor({ color: 'red' });
   } else if (timeLeft <= warning.threshold) {
     document
       .getElementById('base-timer-path-remaining')
@@ -160,6 +167,8 @@ function setRemainingPathColor(timeLeft, COLOR_CODES) {
 
     // change text color
     document.getElementById('base-timer-label').style.color = 'orange';
+    // change badge color
+    chrome.action.setBadgeBackgroundColor({ color: 'orange' });
   }
 }
 
