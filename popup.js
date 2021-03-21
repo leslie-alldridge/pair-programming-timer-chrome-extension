@@ -4,6 +4,8 @@ let endSession = document.getElementById('endSession');
 let sessionTimer = document.getElementById('sessionTimer');
 let description = document.getElementById('description');
 let inputDisplay = document.getElementById('inputDisplay');
+let title = document.getElementById('title');
+let rule = document.getElementById('rule');
 
 // Timer set up
 const FULL_DASH_ARRAY = 283;
@@ -35,6 +37,8 @@ startSessionBtn.addEventListener('click', function () {
   startSessionBtn.style.display = 'none';
   description.style.display = 'none';
   inputDisplay.style.display = 'none';
+  title.style.display = 'none';
+  rule.style.display = 'none';
   // Display timer options and end button
   sessionTimer.style.display = 'block';
   endSession.style.visibility = 'visible';
@@ -58,9 +62,17 @@ resetToDefault = () => {
   startSessionBtn.style.display = 'block';
   description.style.display = 'block';
   inputDisplay.style.display = 'block';
+  title.style.display = 'block';
+  rule.style.display = 'block';
   // Display timer options and end button
-
   endSession.style.visibility = 'hidden';
+
+  // reset timer back to defaults
+  timePassed = 0;
+  timeLeft = TIME_LIMIT;
+  timerInterval = null;
+  remainingPathColor = 'green';
+  document.getElementById('base-timer-label').style.color = 'rgb(65, 184, 131)';
 };
 
 // I liked how clean and easy this timer was. Credit: Mateusz Rybczonec
@@ -105,6 +117,8 @@ function startTimer() {
     );
     setCircleDasharray();
     setRemainingPathColor(timeLeft);
+    console.log(timeLeft);
+    console.log(timePassed);
 
     if (timeLeft === 0) {
       onTimesUp();
@@ -132,6 +146,8 @@ function setRemainingPathColor(timeLeft) {
     document
       .getElementById('base-timer-path-remaining')
       .classList.add(alert.color);
+
+    document.getElementById('base-timer-label').style.color = 'red';
   } else if (timeLeft <= warning.threshold) {
     document
       .getElementById('base-timer-path-remaining')
@@ -139,6 +155,9 @@ function setRemainingPathColor(timeLeft) {
     document
       .getElementById('base-timer-path-remaining')
       .classList.add(warning.color);
+
+    // change text color
+    document.getElementById('base-timer-label').style.color = 'orange';
   }
 }
 
