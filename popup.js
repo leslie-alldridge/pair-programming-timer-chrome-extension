@@ -49,6 +49,7 @@ startSessionBtn.addEventListener('click', function () {
 
   // Render timer and start the countdown
   renderTimerHtml(TIME_LIMIT);
+
   startTimer(COLOR_CODES);
 });
 
