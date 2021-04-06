@@ -1,8 +1,10 @@
 body {
   background-color: #121212;
   padding: 30px;
-  width: 250px;
-  height: 250px;
+  height: 350px;
+  width: 300px;
+  min-width: 300px;
+  min-height: 350px;
   font-family: sans-serif;
   place-items: center;
 }
@@ -26,7 +28,7 @@ h3 {
 #endSession {
   margin-top: 20px;
   margin-bottom: 10px;
-  margin-left: 20%;
+  margin-left: 30%;
   border-radius: 5px;
   visibility: hidden;
 }
@@ -37,8 +39,8 @@ h3 {
 
 .base-timer {
   position: relative;
-  width: auto;
-  height: auto;
+  width: 250px;
+  height: 250px;
 }
 
 .base-timer__svg {

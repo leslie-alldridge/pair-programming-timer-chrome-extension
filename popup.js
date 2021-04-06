@@ -139,29 +139,7 @@ resetToDefault = () => {
 };
 
 renderTimerHtml = (TIME_LIMIT, COLOR_CODES) => {
-  document.getElementById('app').innerHTML = `
-  <div class="base-timer">
-    <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <g class="base-timer__circle">
-        <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
-        <path
-          id="base-timer-path-remaining"
-          stroke-dasharray="283"
-          class="base-timer__path-remaining green"
-          d="
-            M 50, 50
-            m -45, 0
-            a 45,45 0 1,0 90,0
-            a 45,45 0 1,0 -90,0
-          "
-        ></path>
-      </g>
-    </svg>
-    <span id="base-timer-label" class="base-timer__label">${formatTime(
-      TIME_LIMIT
-    )}</span>
-  </div>
-  `;
+  safelySetInnerHtml(formatTime(TIME_LIMIT), 'base-timer-label');
 
   // Update colors if we have a timer already running
   setRemainingPathColor(TIME_LIMIT, COLOR_CODES);
@@ -175,9 +153,11 @@ function startTimer() {
   timerInterval = setInterval(() => {
     timePassed = timePassed += 1;
     timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById('base-timer-label').innerHTML = formatTime(
-      timeLeft
-    );
+
+    safelySetInnerHtml(`${formatTime(timeLeft)}`, 'base-timer-label');
+    // document.getElementById('base-timer-label').innerHTML = formatTime(
+    //   timeLeft
+    // );
 
     setCircleDasharray();
 
@@ -247,4 +227,10 @@ function setCircleDasharray() {
   document
     .getElementById('base-timer-path-remaining')
     .setAttribute('stroke-dasharray', circleDasharray);
+}
+
+// Workaround so we don't set .innerHTML directly in code
+function safelySetInnerHtml(htmlStr, elementId) {
+  var labelNode = document.getElementById(elementId);
+  labelNode.textContent = htmlStr;
 }
