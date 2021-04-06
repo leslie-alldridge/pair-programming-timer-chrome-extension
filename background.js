@@ -95,7 +95,7 @@ startTimer = (TIME_LIMIT) => {
 
     chrome.browserAction.setBadgeText({ text: String(formatTime(timeLeft)) });
 
-    chrome.storage.local.set({ key: timeLeft }, () => {
+    chrome.storage.local.set({ key: timeLeft, threshold: COLOR_CODES }, () => {
       if (chrome.runtime.lastError) {
         console.error(
           'Error setting ' +

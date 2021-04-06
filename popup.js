@@ -41,7 +41,7 @@ chrome.runtime.sendMessage({ getItem: true }, function (response) {
         threshold: ALERT_THRESHOLD,
       },
     };
-    renderTimerHtml(response.data);
+    renderTimerHtml(response.data, COLOR_CODES);
     startTimer(COLOR_CODES);
     // Hide start button and other fields from the landing page
     startSessionBtn.style.display = 'none';
@@ -61,27 +61,6 @@ chrome.runtime.sendMessage({ getItem: true }, function (response) {
     onTimesUp();
     resetToDefault();
   }
-
-  // while (response.data > 0 && i > 0) {
-  //   console.log('in loop');
-  //   (function (i) {
-  //     setTimeout(function () {
-  //       chrome.runtime.sendMessage(
-  //         { getItem: TIME_LIMIT },
-  //         function (response) {
-  //           console.log(response);
-  //           if (response.data > 0) {
-  //             console.log(response.data);
-  //           } else {
-  //             i = 0;
-  //           }
-
-  //
-  //         }
-  //       );
-  //     }, 1000 * i);
-  //   })(i++);
-  // }
 });
 
 startSessionBtn.addEventListener('click', function () {
@@ -121,7 +100,7 @@ startSessionBtn.addEventListener('click', function () {
   };
 
   // Render timer and start the countdown
-  renderTimerHtml(TIME_LIMIT);
+  renderTimerHtml(TIME_LIMIT, COLOR_CODES);
 
   startTimer(COLOR_CODES, TIME_LIMIT);
 });
@@ -143,7 +122,7 @@ resetToDefault = () => {
   // Change background to use our active class
   sessionTimer.style.display = 'none';
   document.body.style.backgroundColor = '#121212';
-  // Hide start button aand description
+  // Hide start button and description
   startSessionBtn.style.display = 'block';
   description.style.display = 'block';
   inputDisplay.style.display = 'block';
@@ -157,15 +136,10 @@ resetToDefault = () => {
   timeLeft = TIME_LIMIT;
   timerInterval = null;
   remainingPathColor = 'green';
-  //chrome.browserAction.setBadgeText({ text: '0:00' });
-  //chrome.browserAction.setBadgeBackgroundColor({ color: '#41B883' });
   document.getElementById('base-timer-label').style.color = 'rgb(65, 184, 131)';
 };
 
-// I liked how clean and easy this timer was. Credit: Mateusz Rybczonec
-// https://css-tricks.com/how-to-create-an-animated-countdown-timer-with-html-css-and-javascript/
-
-renderTimerHtml = (TIME_LIMIT) => {
+renderTimerHtml = (TIME_LIMIT, COLOR_CODES) => {
   document.getElementById('app').innerHTML = `
   <div class="base-timer">
     <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -189,13 +163,16 @@ renderTimerHtml = (TIME_LIMIT) => {
     )}</span>
   </div>
   `;
+
+  // Update colors if we have a timer already running
+  setRemainingPathColor(TIME_LIMIT, COLOR_CODES);
 };
 
 function onTimesUp() {
   clearInterval(timerInterval);
 }
 
-function startTimer(COLOR_CODES) {
+function startTimer() {
   timerInterval = setInterval(() => {
     timePassed = timePassed += 1;
     timeLeft = TIME_LIMIT - timePassed;
@@ -203,14 +180,15 @@ function startTimer(COLOR_CODES) {
       timeLeft
     );
 
-    // Update chrome badge with countdown
-    //chrome.action.setBadgeText({ text: String(formatTime(timeLeft)) });
-
     setCircleDasharray();
-    setRemainingPathColor(timeLeft, COLOR_CODES);
-    chrome.storage.local.get('key', (data) => {
-      console.log(data);
+
+    // Updates colors in popup.html if user has closed and reopened the extension popup
+    chrome.storage.local.get('key', (timeRemaining) => {
+      chrome.storage.local.get('threshold', (data) => {
+        setRemainingPathColor(timeRemaining.key, data.threshold);
+      });
     });
+
     if (timeLeft === 0) {
       onTimesUp();
     }
@@ -230,7 +208,10 @@ function formatTime(time) {
 
 function setRemainingPathColor(timeLeft, COLOR_CODES) {
   const { alert, warning, info } = COLOR_CODES;
+  console.log(timeLeft, COLOR_CODES);
+  console.log(alert, warning, info);
   if (timeLeft <= alert.threshold) {
+    console.log('alert');
     document
       .getElementById('base-timer-path-remaining')
       .classList.remove(warning.color);
@@ -239,8 +220,8 @@ function setRemainingPathColor(timeLeft, COLOR_CODES) {
       .classList.add(alert.color);
 
     document.getElementById('base-timer-label').style.color = 'red';
-    //chrome.action.setBadgeBackgroundColor({ color: 'red' });
   } else if (timeLeft <= warning.threshold) {
+    console.log(warning.color);
     document
       .getElementById('base-timer-path-remaining')
       .classList.remove(info.color);
@@ -250,8 +231,8 @@ function setRemainingPathColor(timeLeft, COLOR_CODES) {
 
     // change text color
     document.getElementById('base-timer-label').style.color = 'orange';
-    // change badge color
-    //chrome.action.setBadgeBackgroundColor({ color: 'orange' });
+  } else {
+    console.log('nothing');
   }
 }
 
