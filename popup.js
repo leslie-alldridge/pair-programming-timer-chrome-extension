@@ -136,7 +136,6 @@ resetToDefault = () => {
   timeLeft = TIME_LIMIT;
   timerInterval = null;
   remainingPathColor = 'green';
-  document.getElementById('base-timer-label').style.color = 'rgb(65, 184, 131)';
 };
 
 renderTimerHtml = (TIME_LIMIT, COLOR_CODES) => {
